@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ランダム日本語文字メーカー</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+      padding: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #4f46e5;
+    }
+
+    .description {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+
+    .form-area {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 18px;
+      border: 2px solid #d1d5db;
+      border-radius: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    }
+
+    button {
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      background: #4f46e5;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+    }
+
+    .sub-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .sub-buttons button {
+      background: #e5e7eb;
+      color: #111827;
+      font-size: 14px;
+      padding: 10px 14px;
+    }
+
+    .sub-buttons button:hover {
+      background: #d1d5db;
+    }
+
+    .info {
+      color: #6b7280;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .output {
+      min-height: 220px;
+      background: #f9fafb;
+      border: 2px dashed #d1d5db;
+      border-radius: 18px;
+      padding: 22px;
+      font-size: 28px;
+      line-height: 1.8;
+      letter-spacing: 0.08em;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .error {
+      color: #dc2626;
+      font-weight: bold;
+      margin-bottom: 12px;
+      min-height: 24px;
+    }
+
+    footer {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 24px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .form-area {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ランダム日本語文字メーカー</h1>
+    <p class="description">指定した文字数ぶん、ランダムなひらがな・カタカナを表示します。</p>
+
+    <div class="form-area">
+      <input id="charCount" type="number" min="1" max="10000" value="20" placeholder="文字数を入力" />
+      <button onclick="generateChars()">生成する</button>
+    </div>
+
+    <div class="sub-buttons">
+      <button onclick="setCount(1)">1文字</button>
+      <button onclick="setCount(10)">10文字</button>
+      <button onclick="setCount(50)">50文字</button>
+      <button onclick="setCount(100)">100文字</button>
+      <button onclick="copyText()">コピー</button>
+      <button onclick="clearText()">消去</button>
+    </div>
+
+    <div id="error" class="error"></div>
+    <p id="info" class="info">現在の文字数：0文字</p>
+    <div id="output" class="output">ここにランダムな日本語が表示されます。</div>
+
+    <footer>© 2026 Random Japanese Character Generator</footer>
+  </div>
+
+  <script>
+    const chars = [
+      "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
+      "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
+      "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
+      "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
+      "る", "れ", "ろ", "わ", "を", "ん",
+      "が", "ぎ", "ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ",
+      "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", "べ", "ぼ",
+      "ぱ", "ぴ", "ぷ", "ぺ", "ぽ",
+      "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
+      "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
+      "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
+      "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ",
+      "ル", "レ", "ロ", "ワ", "ヲ", "ン",
+    ];
+
+    function generateChars() {
+      const countInput = document.getElementById("charCount");
+      const output = document.getElementById("output");
+      const error = document.getElementById("error");
+      const info = document.getElementById("info");
+
+      const count = Number(countInput.value);
+      error.textContent = "";
+
+      if (!Number.isInteger(count) || count < 1) {
+        error.textContent = "1以上の整数を入力してください。";
+        return;
+      }
+
+      if (count > 10000) {
+        error.textContent = "文字数は10000文字以内にしてください。";
+        return;
+      }
+
+      let result = "";
+      for (let i = 0; i < count; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        result += chars[randomIndex];
+      }
+
+      output.textContent = result;
+      info.textContent = `現在の文字数：${count}文字`;
+    }
+
+    function setCount(count) {
+      document.getElementById("charCount").value = count;
+      generateChars();
+    }
+
+    function copyText() {
+      const text = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(text);
+      document.getElementById("error").textContent = "コピーしました。";
+    }
+
+    function clearText() {
+      document.getElementById("output").textContent = "ここにランダムな日本語が表示されます。";
+      document.getElementById("info").textContent = "現在の文字数：0文字";
+      document.getElementById("error").textContent = "";
+    }
+
+    generateChars();
+  </script>
+</body>
+</html>
