@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ランダム日本語文字メーカー</title>
+  <title>架空ニュースメーカー</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,9 +13,9 @@
 
     body {
       font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
-      color: #1f2937;
       min-height: 100vh;
+      background: linear-gradient(135deg, #111827, #312e81, #7c2d12);
+      color: #111827;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -25,125 +25,158 @@
     .container {
       width: 100%;
       max-width: 900px;
-      background: white;
+      background: #f9fafb;
       border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-      padding: 32px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
     }
 
-    h1 {
+    header {
+      background: #111827;
+      color: white;
+      padding: 28px 32px;
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 10px;
-      color: #4f46e5;
+      border-bottom: 6px solid #dc2626;
     }
 
-    .description {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 28px;
+    header h1 {
+      font-size: 34px;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
     }
 
-    .form-area {
-      display: grid;
-      grid-template-columns: 1fr auto;
+    header p {
+      color: #d1d5db;
+      font-size: 15px;
+    }
+
+    main {
+      padding: 28px 32px 34px;
+    }
+
+    .buttons {
+      display: flex;
       gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 18px;
-      border: 2px solid #d1d5db;
-      border-radius: 14px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      justify-content: center;
     }
 
     button {
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: bold;
       border: none;
-      border-radius: 14px;
-      background: #4f46e5;
-      color: white;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: bold;
       cursor: pointer;
       transition: 0.2s;
     }
 
-    button:hover {
-      background: #4338ca;
+    .generate {
+      background: #dc2626;
+      color: white;
+    }
+
+    .generate:hover {
+      background: #b91c1c;
       transform: translateY(-1px);
     }
 
-    .sub-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .copy, .clear {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .copy:hover, .clear:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+    }
+
+    .news-card {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #dc2626;
+      color: white;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .headline {
+      font-size: 30px;
+      line-height: 1.35;
+      margin-bottom: 18px;
+      color: #111827;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 16px;
+    }
+
+    .meta {
+      color: #6b7280;
+      font-size: 14px;
       margin-bottom: 20px;
     }
 
-    .sub-buttons button {
-      background: #e5e7eb;
-      color: #111827;
-      font-size: 14px;
-      padding: 10px 14px;
-    }
-
-    .sub-buttons button:hover {
-      background: #d1d5db;
-    }
-
-    .info {
-      color: #6b7280;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
-
-    .output {
-      min-height: 220px;
-      background: #f9fafb;
-      border: 2px dashed #d1d5db;
-      border-radius: 18px;
-      padding: 22px;
-      font-size: 28px;
-      line-height: 1.8;
-      letter-spacing: 0.08em;
-      word-break: break-all;
+    .body-text {
+      font-size: 18px;
+      line-height: 1.9;
+      margin-bottom: 18px;
       white-space: pre-wrap;
     }
 
-    .error {
+    .quote-box {
+      background: #f3f4f6;
+      border-left: 5px solid #dc2626;
+      padding: 16px 18px;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .message {
+      text-align: center;
       color: #dc2626;
       font-weight: bold;
-      margin-bottom: 12px;
       min-height: 24px;
+      margin-bottom: 10px;
     }
 
     footer {
       text-align: center;
-      color: #9ca3af;
-      margin-top: 24px;
+      color: #6b7280;
       font-size: 13px;
+      margin-top: 22px;
     }
 
     @media (max-width: 640px) {
-      .container {
-        padding: 24px;
-      }
-
-      h1 {
+      header h1 {
         font-size: 26px;
       }
 
-      .form-area {
-        grid-template-columns: 1fr;
+      main {
+        padding: 22px;
+      }
+
+      .news-card {
+        padding: 22px;
+      }
+
+      .headline {
+        font-size: 24px;
+      }
+
+      .body-text {
+        font-size: 16px;
       }
 
       button {
@@ -154,94 +187,138 @@
 </head>
 <body>
   <div class="container">
-    <h1>ランダム日本語文字メーカー</h1>
-    <p class="description">指定した文字数ぶん、ランダムなひらがな・カタカナを表示します。</p>
+    <header>
+      <h1>架空ニュースメーカー</h1>
+      <p>ありそうで絶対なさそうなニュースをランダム生成します。</p>
+    </header>
 
-    <div class="form-area">
-      <input id="charCount" type="number" min="1" max="10000" value="20" placeholder="文字数を入力" />
-      <button onclick="generateChars()">生成する</button>
-    </div>
+    <main>
+      <div class="buttons">
+        <button class="generate" onclick="generateNews()">ニュースを生成</button>
+        <button class="copy" onclick="copyNews()">コピー</button>
+        <button class="clear" onclick="clearNews()">消去</button>
+      </div>
 
-    <div class="sub-buttons">
-      <button onclick="setCount(1)">1文字</button>
-      <button onclick="setCount(10)">10文字</button>
-      <button onclick="setCount(50)">50文字</button>
-      <button onclick="setCount(100)">100文字</button>
-      <button onclick="copyText()">コピー</button>
-      <button onclick="clearText()">消去</button>
-    </div>
+      <div id="message" class="message"></div>
 
-    <div id="error" class="error"></div>
-    <p id="info" class="info">現在の文字数：0文字</p>
-    <div id="output" class="output">ここにランダムな日本語が表示されます。</div>
+      <article class="news-card" id="newsCard">
+        <div class="tag" id="tag">速報</div>
+        <h2 class="headline" id="headline">冷蔵庫、大学の食堂で人生相談を開始</h2>
+        <p class="meta" id="meta">架空通信社・本日配信</p>
+        <p class="body-text" id="bodyText">本日午前、大学の食堂で冷蔵庫が突然「保存するだけの人生は嫌だ」と発言したことが分かりました。現場は一時騒然となりましたが、現在は通常通り冷えています。</p>
+        <div class="quote-box" id="witnessComment">目撃者は「最初は霜取り機能かと思った」と話しています。</div>
+        <div class="quote-box" id="expertComment">専門家は「これは新しい時代の始まりです」と分析しています。</div>
+      </article>
 
-    <footer>© 2026 Random Japanese Character Generator</footer>
+      <footer>© 2026 Fictional News Generator</footer>
+    </main>
   </div>
 
   <script>
-    const chars = [
-      "あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ",
-      "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と",
-      "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ",
-      "ま", "み", "む", "め", "も", "や", "ゆ", "よ", "ら", "り",
-      "る", "れ", "ろ", "わ", "を", "ん",
-      "が", "ぎ", "ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ",
-      "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", "べ", "ぼ",
-      "ぱ", "ぴ", "ぷ", "ぺ", "ぽ",
-      "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
-      "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
-      "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-      "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ",
-      "ル", "レ", "ロ", "ワ", "ヲ", "ン",
+    const tags = ["速報", "悲報", "朗報", "独自", "緊急", "続報", "謎", "話題", "衝撃", "検証"];
+
+    const subjects = [
+      "冷蔵庫", "コピー機", "自動販売機", "信号機", "消しゴム", "シャーペン", "黒板", "椅子", "机", "時計",
+      "カラス", "猫", "犬", "鳩", "金魚", "たぬき", "校長先生の銅像", "大学のプリンター", "駅の改札", "コンビニのおにぎり",
+      "スマホ", "充電器", "リモコン", "電子レンジ", "扇風機", "洗濯機", "エアコン", "イヤホン", "ノート", "カバン"
     ];
 
-    function generateChars() {
-      const countInput = document.getElementById("charCount");
-      const output = document.getElementById("output");
-      const error = document.getElementById("error");
-      const info = document.getElementById("info");
+    const places = [
+      "大学の食堂", "コンビニ前", "駅のホーム", "教室のすみ", "図書館", "自転車置き場", "商店街", "公園のベンチ", "研究室", "スーパーのレジ前",
+      "バス停", "屋上", "体育館裏", "カラオケ店", "パン屋の前", "交差点", "エレベーター内", "廊下", "自習室", "ラーメン屋"
+    ];
 
-      const count = Number(countInput.value);
-      error.textContent = "";
+    const actions = [
+      "人生相談を開始", "突然の記者会見を実施", "深夜に哲学を語る", "人間関係に疲れたと発表", "謎のダンスを披露",
+      "Wi-Fiのパスワードを解読", "将来の夢を語る", "静かに反省文を書く", "新しい部活動を設立", "月曜日への不満を表明",
+      "自分探しの旅に出発", "まさかの立候補を表明", "昼休みに革命を宣言", "急に敬語を使い始める", "冷静に世界平和を提案"
+    ];
 
-      if (!Number.isInteger(count) || count < 1) {
-        error.textContent = "1以上の整数を入力してください。";
-        return;
-      }
+    const speeches = [
+      "もう限界です", "思っていた未来と違いました", "私はただ静かに暮らしたかった", "今日から本気を出します", "誰にも気づかれない努力をしてきました",
+      "保存するだけの人生は嫌だ", "そろそろ評価されてもいい頃です", "月曜日だけは許せません", "自分の可能性を信じたい", "昨日の自分を超えたい"
+    ];
 
-      if (count > 10000) {
-        error.textContent = "文字数は10000文字以内にしてください。";
-        return;
-      }
+    const situations = [
+      "現場は一時騒然となりました", "周囲の学生たちは困惑した様子でした", "近くにいた人々は静かに拍手を送りました", "関係者は確認を急いでいます", "SNSでは驚きの声が広がっています",
+      "一部では応援する声も上がっています", "店員は冷静に対応しました", "教授陣の間でも議論が広がっています", "通行人は二度見していました", "その後、何事もなかったように通常運転に戻りました"
+    ];
 
-      let result = "";
-      for (let i = 0; i < count; i++) {
-        const randomIndex = Math.floor(Math.random() * chars.length);
-        result += chars[randomIndex];
-      }
+    const witnesses = [
+      "近くにいた学生", "通行人", "アルバイト店員", "自転車で通りかかった人", "偶然そこにいた犬", "近所のおじさん", "研究室の先輩", "清掃員", "ラーメン屋の店主", "目撃した高校生"
+    ];
 
-      output.textContent = result;
-      info.textContent = `現在の文字数：${count}文字`;
+    const witnessReactions = [
+      "最初は見間違いかと思った", "あまりにも自然で逆に怖かった", "正直、少し感動した", "何が起きているのか分からなかった", "とりあえず写真を撮った",
+      "月曜日なら仕方ないと思った", "急に話しかけられてびっくりした", "意外と礼儀正しかった", "声が思ったより低かった", "また見たいと思った"
+    ];
+
+    const experts = [
+      "専門家", "大学教授", "AI研究者", "心理カウンセラー", "元コンビニ店員", "都市伝説研究家", "生活家電評論家", "哲学者", "謎現象アナリスト", "自称未来人"
+    ];
+
+    const expertReactions = [
+      "これは非常に珍しい現象です", "科学ではまだ説明できません", "新しい時代の始まりかもしれません", "思ったより深刻です", "社会全体で考えるべき問題です",
+      "疲れている現代人へのメッセージでしょう", "まずは温かく見守る必要があります", "今後の研究が必要です", "正直、よく分かりません", "名前をつけるなら『日常型ミラクル現象』です"
+    ];
+
+    const endings = [
+      "と話しています。", "と分析しています。", "と困惑した様子でした。", "と笑顔で語りました。", "と慎重な見方を示しました。"
+    ];
+
+    function randomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
     }
 
-    function setCount(count) {
-      document.getElementById("charCount").value = count;
-      generateChars();
+    function generateNews() {
+      const tag = randomItem(tags);
+      const subject = randomItem(subjects);
+      const place = randomItem(places);
+      const action = randomItem(actions);
+      const speech = randomItem(speeches);
+      const situation = randomItem(situations);
+      const witness = randomItem(witnesses);
+      const witnessReaction = randomItem(witnessReactions);
+      const expert = randomItem(experts);
+      const expertReaction = randomItem(expertReactions);
+      const ending = randomItem(endings);
+
+      document.getElementById("tag").textContent = tag;
+      document.getElementById("headline").textContent = `${subject}、${place}で${action}`;
+      document.getElementById("meta").textContent = `架空通信社・本日${Math.floor(Math.random() * 24)}時${Math.floor(Math.random() * 60)}分配信`;
+      document.getElementById("bodyText").textContent = `本日、${place}で${subject}が突然「${speech}」と発言したことが分かりました。${situation}。関係者によると、${subject}は以前から何かを考え込むような様子を見せていたということです。`;
+      document.getElementById("witnessComment").textContent = `${witness}は「${witnessReaction}」と話しています。`;
+      document.getElementById("expertComment").textContent = `${expert}は「${expertReaction}」${ending}`;
+      document.getElementById("message").textContent = "";
     }
 
-    function copyText() {
-      const text = document.getElementById("output").textContent;
-      navigator.clipboard.writeText(text);
-      document.getElementById("error").textContent = "コピーしました。";
+    function getNewsText() {
+      const tag = document.getElementById("tag").textContent;
+      const headline = document.getElementById("headline").textContent;
+      const meta = document.getElementById("meta").textContent;
+      const body = document.getElementById("bodyText").textContent;
+      const witness = document.getElementById("witnessComment").textContent;
+      const expert = document.getElementById("expertComment").textContent;
+
+      return `【${tag}】${headline}\n${meta}\n\n${body}\n\n${witness}\n${expert}`;
     }
 
-    function clearText() {
-      document.getElementById("output").textContent = "ここにランダムな日本語が表示されます。";
-      document.getElementById("info").textContent = "現在の文字数：0文字";
-      document.getElementById("error").textContent = "";
+    function copyNews() {
+      navigator.clipboard.writeText(getNewsText());
+      document.getElementById("message").textContent = "コピーしました。";
     }
 
-    generateChars();
+    function clearNews() {
+      document.getElementById("tag").textContent = "---";
+      document.getElementById("headline").textContent = "ニュースを生成してください";
+      document.getElementById("meta").textContent = "";
+      document.getElementById("bodyText").textContent = "";
+      document.getElementById("witnessComment").textContent = "";
+      document.getElementById("expertComment").textContent = "";
+      document.getElementById("message").textContent = "";
+    }
+
+    generateNews();
   </script>
 </body>
 </html>
