@@ -196,6 +196,7 @@
       <div class="buttons">
         <button class="generate" onclick="generateNews()">ニュースを生成</button>
         <button class="copy" onclick="copyNews()">コピー</button>
+        <button class="copy" onclick="copyForX()">X用コピー</button>
         <button class="clear" onclick="clearNews()">消去</button>
       </div>
 
@@ -306,6 +307,18 @@
     function copyNews() {
       navigator.clipboard.writeText(getNewsText());
       document.getElementById("message").textContent = "コピーしました。";
+    }
+
+    function copyForX() {
+      const tag = document.getElementById("tag").textContent;
+      const headline = document.getElementById("headline").textContent;
+      const url = "https://moriri-maker.github.io/moriri.github.io/";
+      const text = `【${tag}】${headline}
+#架空ニュースメーカー
+${url}`;
+
+      navigator.clipboard.writeText(text);
+      document.getElementById("message").textContent = "X投稿用テキストをコピーしました。";
     }
 
     function clearNews() {
